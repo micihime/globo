@@ -21,6 +21,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/houses", (HouseDbContext db) => db.Houses);
+app.MapGet("/houses", (HouseDbContext db) =>
+db.Houses.Select(h => new HouseDto(h.Id, h.Address, h.Country, h.Price)));
 
 app.Run();
