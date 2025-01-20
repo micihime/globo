@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 
-public class HouseRepository
+public interface IHouseRepository
+{
+    Task<List<HouseDto>> GetAll();
+}
+
+public class HouseRepository : IHouseRepository
 {
     private readonly HouseDbContext context;
 
