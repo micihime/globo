@@ -1,9 +1,13 @@
+import ApiStatus from "../apiStatus";
 import { currencyFormatter } from "../config";
 import useFetchHouses from "../hooks/HouseHooks";
 
 const HouseList = () => {
-    const { data } = useFetchHouses();
+    const { data, status, isSuccess } = useFetchHouses();
 
+    if (!isSuccess)
+        return <ApiStatus status={status} />
+        
     return (
         <div>
             <div className="row mb-2">
