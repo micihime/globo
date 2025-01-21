@@ -2,7 +2,7 @@ import useFetchHouses from "../hooks/HouseHooks";
 
 const HouseList = () => {
     const houses= useFetchHouses();
-    
+
     return (
         <div>
             <div className="row mb-2">
