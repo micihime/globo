@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,7 @@ app.UseHttpsRedirection();
 
 app.MapGet("/houses", (IHouseRepository repo) => repo.GetAll())
     .Produces<HouseDto[]>(StatusCodes.Status200OK);
+
 app.MapGet("/houses/{houseId:int}", async (int houseId, IHouseRepository repo) =>
 {
     var house = await repo.Get(houseId);
@@ -34,5 +36,11 @@ app.MapGet("/houses/{houseId:int}", async (int houseId, IHouseRepository repo) =
         return Results.Problem($"House {houseId} not found", statusCode: 404);
     return Results.Ok(house);
 }).ProducesProblem(404).Produces<HouseDetailDto>();
+
+app.MapPost("/houses", async ([FromBody]HouseDetailDto dto, IHouseRepository repo) => 
+{
+    var newHouse = repo.Add(dto);
+    return Results.Created($"/houses/{newHouse.Id}", newHouse);
+}).Produces<HouseDetailDto>(StatusCodes.Status201Created);
 
 app.Run();

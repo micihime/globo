@@ -4,6 +4,7 @@ public interface IHouseRepository
 {
     Task<List<HouseDto>> GetAll();
     Task<HouseDetailDto?> Get(int id);
+    Task<HouseDetailDto> Add(HouseDetailDto dto);
 }
 
 public class HouseRepository : IHouseRepository
@@ -13,6 +14,20 @@ public class HouseRepository : IHouseRepository
     public HouseRepository(HouseDbContext context)
     {
         this.context = context;
+    }
+
+    private static void DtoToEntity(HouseDetailDto dto, HouseEntity e)
+    {
+        e.Address = dto.Address;
+        e.Country = dto.Country;
+        e.Price = dto.Price;
+        e.Description = dto.Description;
+        e.Photo = dto.Photo;
+    }
+
+    private static HouseDetailDto EntityToDetailDto(HouseEntity e)
+    {
+        return new HouseDetailDto(e.Id, e.Address, e.Country, e.Price, e.Description, e.Photo);
     }
 
     public async Task<List<HouseDto>> GetAll()
@@ -25,6 +40,15 @@ public class HouseRepository : IHouseRepository
         var e = await context.Houses.SingleOrDefaultAsync(h => h.Id == id);
         if (e == null)
             return null;
-        return new HouseDetailDto(e.Id, e.Address, e.Country, e.Price, e.Description, e.Photo);
+        return EntityToDetailDto(e);
+    }
+
+    public async Task<HouseDetailDto> Add(HouseDetailDto dto)
+    {
+        var entity = new HouseEntity();
+        DtoToEntity(dto, entity);
+        context.Houses.Add(entity);
+        await context.SaveChangesAsync();
+        return EntityToDetailDto(entity);
     }
 }
