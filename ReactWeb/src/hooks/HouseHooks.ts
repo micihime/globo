@@ -35,5 +35,20 @@ const useAddHouse = () => {
     });
 }
 
+const useUpdateHouse = () => {
+    const nav = useNavigate();
+    const queryClient = useQueryClient();
+
+    return useMutation<AxiosResponse, AxiosError, House>({
+        mutationFn: (house) => axios.put(`${config.baseApiUrl}/houses`, house),
+        onSuccess: (_, house) => {
+            queryClient.invalidateQueries({
+                queryKey: ["houses"]
+            });
+            nav(`/house/${house.id}`);
+        }
+    });
+}
+
 export default useFetchHouses;
-export { useFetchHouse, useAddHouse };
+export { useFetchHouse, useAddHouse, useUpdateHouse };
