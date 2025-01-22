@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,10 +38,18 @@ app.MapGet("/houses/{houseId:int}", async (int houseId, IHouseRepository repo) =
     return Results.Ok(house);
 }).ProducesProblem(404).Produces<HouseDetailDto>();
 
-app.MapPost("/houses", async ([FromBody]HouseDetailDto dto, IHouseRepository repo) => 
+app.MapPost("/houses", async ([FromBody] HouseDetailDto dto, IHouseRepository repo) =>
 {
     var newHouse = repo.Add(dto);
     return Results.Created($"/houses/{newHouse.Id}", newHouse);
 }).Produces<HouseDetailDto>(StatusCodes.Status201Created);
+
+app.MapPut("/houses", async ([FromBody] HouseDetailDto dto, IHouseRepository repo) =>
+{
+    if (await repo.Get(dto.Id) == null)
+        return Results.Problem($"House {dto.Id} not found", statusCode: 404);
+    var updatedHouse = await repo.Update(dto);
+    return Results.Ok(updatedHouse);
+}).ProducesProblem(404).Produces<HouseDetailDto>();
 
 app.Run();

@@ -5,6 +5,7 @@ public interface IHouseRepository
     Task<List<HouseDto>> GetAll();
     Task<HouseDetailDto?> Get(int id);
     Task<HouseDetailDto> Add(HouseDetailDto dto);
+    Task<HouseDetailDto> Update(HouseDetailDto dto);
 }
 
 public class HouseRepository : IHouseRepository
@@ -48,6 +49,17 @@ public class HouseRepository : IHouseRepository
         var entity = new HouseEntity();
         DtoToEntity(dto, entity);
         context.Houses.Add(entity);
+        await context.SaveChangesAsync();
+        return EntityToDetailDto(entity);
+    }
+
+    public async Task<HouseDetailDto> Update(HouseDetailDto dto)
+    {
+        var entity = await context.Houses.FindAsync(dto.Id);
+        if (entity == null)
+            throw new ArgumentException($"House with id {dto.Id} not found");
+        DtoToEntity(dto, entity);
+        context.Entry(entity).State = EntityState.Modified;
         await context.SaveChangesAsync();
         return EntityToDetailDto(entity);
     }
