@@ -18,7 +18,7 @@ const HouseDetail = () => {
         <div className="row">
             <div className="col-6">
                 <div className="row">
-                    <img className="img-fluid" src={data.photo} alt="House pic" />
+                    <img className="img-fluid" src={data.photo ? data.photo : defaultImage} alt="House pic" />
                 </div>
             </div>
             <div className="col-6">
