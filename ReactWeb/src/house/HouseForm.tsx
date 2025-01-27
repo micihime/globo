@@ -43,8 +43,7 @@ const onSubmit: React.MouseEventHandler<HTMLButtonElement> =
       </div>
       <div className="form-group mt-2">
         <label htmlFor="description">Description</label>
-        <input
-          type="text"
+        <textarea
           className="form-control"
           placeholder="Description"
           value={houseState.description}
