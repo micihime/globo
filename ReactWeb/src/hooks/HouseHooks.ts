@@ -3,6 +3,7 @@ import config from "../config";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
+import Problem from "../types/problem";
 
 const useFetchHouses = () => {
     return useQuery<House[], AxiosError>({
@@ -24,7 +25,7 @@ const useAddHouse = () => {
     const nav = useNavigate();
     const queryClient = useQueryClient();
 
-    return useMutation<AxiosResponse, AxiosError, House>({
+    return useMutation<AxiosResponse, AxiosError<Problem>, House>({
         mutationFn: (house) => axios.post(`${config.baseApiUrl}/houses`, house),
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -39,7 +40,7 @@ const useUpdateHouse = () => {
     const nav = useNavigate();
     const queryClient = useQueryClient();
 
-    return useMutation<AxiosResponse, AxiosError, House>({
+    return useMutation<AxiosResponse, AxiosError<Problem>, House>({
         mutationFn: (house) => axios.put(`${config.baseApiUrl}/houses`, house),
         onSuccess: (_, house) => {
             queryClient.invalidateQueries({
