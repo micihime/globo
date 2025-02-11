@@ -3,6 +3,7 @@ import { useDeleteHouse, useFetchHouse } from "../hooks/HouseHooks";
 import ApiStatus from "../apiStatus";
 import { currencyFormatter } from "../config";
 import defaultImage from "./defaultPhoto";
+import Bids from "../bids/Bids";
 
 const HouseDetail = () => {
   const { id } = useParams();
@@ -63,6 +64,7 @@ const HouseDetail = () => {
         <div className="row mt-2">
           <p>{data.description}</p>
         </div>
+        <Bids house={data} />
       </div>
     </div>
   );
